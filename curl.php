@@ -18,9 +18,7 @@ $content = $curl->response;
 
 htmlentities( $content );
 $content = iconv( 'UTF-8', 'UTF-8//TRANSLIT', $content );
-//$content = preg_replace('~\p{C}+~u', '', $content);
-//echo $content;
-//exit;
+
 $dom = new DOMDocument();
 $dom->loadHTML( $content );
 $selector = new DOMXPath($dom);
@@ -34,7 +32,7 @@ if( isset( $linkArray['error'] ) ){
     echo $linkArray['error'] . '<br/>';
     exit;
 }
-//here is a comment
+
 $count = ceil( $linkArray[3][1] / 50 );
 $paramFirst = $linkArray['link'] . '?' . $linkArray[1][0] . '=';
 $paramSecond = '&'. $linkArray[2][0] . '=50&' . $linkArray[3][0] . '=';
@@ -47,7 +45,6 @@ for( $i = 1; $i <= $count; $i++ ){
     foreach( $articleTag as $ar ){
         $details = parseContent( $dom->saveXML( $ar ), PRODUCTDETIALCLASS );
         print_r( $details );
-        //echo $ar->nodeValue . '<br/><br/>';
         $recordCount++;
         exit;
     }
