@@ -34,7 +34,7 @@ if( isset( $linkArray['error'] ) ){
     echo $linkArray['error'] . '<br/>';
     exit;
 }
-
+//here is a comment
 $count = ceil( $linkArray[3][1] / 50 );
 $paramFirst = $linkArray['link'] . '?' . $linkArray[1][0] . '=';
 $paramSecond = '&'. $linkArray[2][0] . '=50&' . $linkArray[3][0] . '=';
