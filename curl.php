@@ -64,7 +64,8 @@ function parseContent( $html, $tag ){
     $tempDom = new DOMDocument();
     $tempDom->loadHTML( $html );
     $xPath = new DOMXPath( $tempDom );
-    $token = $xPath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $tag ')]");
+    //found a work around where I didn't need to use this yet
+    //$token = $xPath->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $tag ')]");
 
     switch( $tag ){
         case PRODUCTDETIALCLASS:
@@ -74,10 +75,11 @@ function parseContent( $html, $tag ){
             foreach( $detailList as $d ){
                 $details[] = preg_replace('/[^0-9a-zA-Z.:%_\s]/', "", $d->nodeValue ) . '<br/>';
             }
+            return $details;
             break;
     }
 
-    return $details;
+
 
     /*
     $all = $xPath->query("//div");
