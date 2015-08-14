@@ -1,0 +1,14 @@
+{
+  "name": "Dev Site",
+  "description": "Michaels Dev Site",
+  "authors": [
+    {
+      "name": "Benjamin Burkett",
+      "email": "benburkett11@gmail.com"
+    }
+  ],
+  "require": {
+    "php-curl-class/php-curl-class": "^4.6",
+    "phpmailer/phpmailer": "^5.2"
+  }
+}

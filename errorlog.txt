@@ -1,0 +1,9 @@
+*   Trying 108.162.205.79...
+* Connected to secure.rentecdirect.com (108.162.205.79) port 443 (#0)
+* SSL certificate problem: unable to get local issuer certificate
+* Closing connection 0
+* Hostname secure.rentecdirect.com was found in DNS cache
+*   Trying 108.162.205.79...
+* Connected to secure.rentecdirect.com (108.162.205.79) port 443 (#1)
+* SSL certificate problem: unable to get local issuer certificate
+* Closing connection 1
