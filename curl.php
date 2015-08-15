@@ -6,18 +6,21 @@
  * Time: 7:15 PM
  */
 require_once 'vendor/autoload.php';
+require_once 'processing/bodybuildingProc.php';
+
 libxml_use_internal_errors(true);
 set_time_limit( 300 );
 $time_start = microtime(true);
 $recordCount = 0;
 use \Curl\Curl;
 
+$categories = array( 'whey', 'creatine' );
 $curl = new Curl();
-$curl->get( 'http://www.bodybuilding.com/store/whey.html' );
+$curl->get( 'http://www.bodybuilding.com/store/' . $categories[0] . '.html' );
 $content = $curl->response;
 
 htmlentities( $content );
-$content = iconv( 'UTF-8', 'UTF-8//TRANSLIT', $content );
+$content = iconv( 'UTF-8', 'UTF-8//IGNORE', $content );
 
 $dom = new DOMDocument();
 $dom->loadHTML( $content );
@@ -34,6 +37,8 @@ if( isset( $linkArray['error'] ) ){
 }
 
 $count = ceil( $linkArray[3][1] / 50 );
+$actualCount = $linkArray[3][1];
+$done = FALSE;
 $paramFirst = $linkArray['link'] . '?' . $linkArray[1][0] . '=';
 $paramSecond = '&'. $linkArray[2][0] . '=50&' . $linkArray[3][0] . '=';
 
@@ -43,18 +48,24 @@ for( $i = 1; $i <= $count; $i++ ){
     $tempSelector = new DOMXPath( $dom );
     $articleTag = $tempSelector->query( '/html/body//article' );
     foreach( $articleTag as $ar ){
+        if( $recordCount > $actualCount ){
+            $done = TRUE;
+            break;
+        }
         $details = parseContent( $dom->saveXML( $ar ), PRODUCTDETIALCLASS );
-        print_r( $details );
+        $result = parseWhey( $details );
+        echo ( $result ) ? '' : 'Failure<br/>';
         $recordCount++;
-        exit;
+        unset( $details );
     }
-
+    if( $done )
+        break;
 }
 
 $curl->close();
 $time_end = microtime(true);
 $execution_time = ($time_end - $time_start);
-echo '<b>Total Execution Time:</b> '.$execution_time.' Mins<br/>';
+echo '<b>Total Execution Time:</b> '.$execution_time.' seconds<br/>';
 echo 'Record count: ' . $recordCount;
 
 function parseContent( $html, $tag ){
@@ -67,10 +78,10 @@ function parseContent( $html, $tag ){
     switch( $tag ){
         case PRODUCTDETIALCLASS:
             $title = $xPath->query("//h3");
-            $details['title'] = preg_replace('/[^0-9a-zA-Z]/', "", $title[0]->nodeValue ) . '<br/>';
+            $details['title'] = preg_replace('/[^0-9a-zA-Z.:% ]/', "", $title[0]->nodeValue );
             $detailList = $xPath->query("//ul/li");
             foreach( $detailList as $d ){
-                $details[] = preg_replace('/[^0-9a-zA-Z.:%_\s]/', "", $d->nodeValue ) . '<br/>';
+                $details[] = preg_replace('/[^0-9a-zA-Z.:% ]/', "", $d->nodeValue );
             }
             return $details;
             break;
